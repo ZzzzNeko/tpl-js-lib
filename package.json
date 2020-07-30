@@ -1,0 +1,9 @@
+{
+  "name": "tpl-js-lib",
+  "version": "1.0.0",
+  "description": "A project init template for js lib",
+  "main": "index.js",
+  "repository": "https://github.com/ZzzNeko/tpl-js-lib.git",
+  "author": "ZzzNeko",
+  "license": "MIT"
+}

@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+
+# output
+dist
+type
+@type
+types
+@types
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# package lock
+*.lock
+*-lock.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# TypeScript cache
+*.tsbuildinfo
