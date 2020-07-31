@@ -7,7 +7,7 @@ const tsconfig = require("../tsconfig.json");
 const getProjectPath = (...d) => path.resolve(__dirname, "../", ...d);
 const projectPath = getProjectPath("./");
 const tscTempPath = getProjectPath(tsconfig.compilerOptions.outDir);
-const tscTempEntry = getProjectPath(tscTempPath, "./main");
+const tscTempEntry = getProjectPath(tscTempPath, "./index");
 
 /**
  * 执行 npm script
