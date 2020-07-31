@@ -5,5 +5,25 @@
   "main": "index.js",
   "repository": "https://github.com/ZzzNeko/tpl-js-lib.git",
   "author": "ZzzNeko",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "b": "rollup --config rollup.config.js",
+    "build": "node script/build build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@rollup/plugin-typescript": "^5.0.2",
+    "rollup": "^2.23.0",
+    "terser": "^4.8.0",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "commander": "^6.0.0",
+    "fs-extra": "^9.0.1"
+  }
 }
