@@ -1,12 +1,16 @@
 const path = require("path");
-const { spawnSync } = require("child_process");
+const execa = require("execa");
 const commander = require("commander");
+const chalk = require("chalk");
 const fse = require("fs-extra");
+const ora = require("ora");
 const tsconfig = require("../tsconfig.json");
 
 const getProjectPath = (...d) => path.resolve(__dirname, "../", ...d);
 const projectPath = getProjectPath("./");
 const tscTempPath = getProjectPath(tsconfig.compilerOptions.outDir);
+const tscTypePath = getProjectPath(tsconfig.compilerOptions.declarationDir);
+const buildJsPath = getProjectPath("./dist");
 const tscTempEntry = getProjectPath(tscTempPath, "./index");
 
 /**
@@ -14,7 +18,7 @@ const tscTempEntry = getProjectPath(tscTempPath, "./index");
  * @param { string } script npm script
  */
 function executeScript(script) {
-  spawnSync(script, {
+  return execa(script, {
     shell: true,
     stdio: "inherit",
     cwd: projectPath,
@@ -25,16 +29,21 @@ commander
   .command("build")
   .arguments("<type>")
   .description("项目构建")
-  .action(function (type, cmd) {
+  .action(async function (type, cmd) {
     if (type == "js") {
-      const script = "rollup --config rollup.config.js";
-      executeScript(script);
+      const buildJs = "rollup --config rollup.config.js";
+      await fse.emptyDir(buildJsPath);
+      await executeScript(buildJs);
     }
 
     if (type == "ts") {
-      const script = `tsc && rollup --config rollup.config.js --input ${tscTempEntry}`;
-      executeScript(script);
-      fse.emptyDirSync(tscTempPath);
+      const buildTs = "tsc";
+      const buildJs = `rollup --config rollup.config.js --input ${tscTempEntry}`;
+      await fse.emptyDir(tscTempPath);
+      await fse.emptyDir(tscTypePath);
+      await fse.emptyDir(buildJsPath);
+      await executeScript(buildTs);
+      await executeScript(buildJs);
     }
   });
 
