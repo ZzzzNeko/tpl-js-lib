@@ -1,9 +1,8 @@
 const path = require("path");
-const execa = require("execa");
-const commander = require("commander");
-const chalk = require("chalk");
 const fse = require("fs-extra");
-const ora = require("ora");
+const commander = require("commander");
+const execa = require("execa");
+const Listr = require("listr");
 const tsconfig = require("../tsconfig.json");
 
 const getProjectPath = (...d) => path.resolve(__dirname, "../", ...d);
@@ -19,8 +18,8 @@ const tscTempEntry = getProjectPath(tscTempPath, "./index");
  */
 function executeScript(script) {
   return execa(script, {
-    shell: true,
-    stdio: "inherit",
+    // shell: true,
+    // stdio: "inherit",
     cwd: projectPath,
   });
 }
@@ -28,23 +27,49 @@ function executeScript(script) {
 commander
   .command("build")
   .arguments("<type>")
+  .option("-m, --min", "同时生成压缩文件")
   .description("项目构建")
   .action(async function (type, cmd) {
-    if (type == "js") {
-      const buildJs = "rollup --config rollup.config.js";
-      await fse.emptyDir(buildJsPath);
-      await executeScript(buildJs);
-    }
+    const needMinify = cmd.min;
+    const isTs = type.toLowerCase() === "ts";
+    const isJs = type.toLowerCase() === "js";
+    const buildTs = "tsc";
+    const buildJs =
+      (isJs && "rollup --config rollup.config.js") ||
+      (isTs && `rollup --config rollup.config.js --input ${tscTempEntry}`) ||
+      "";
+    const minifyJs = `terser ${"dist/index.js"} --compress -o ${"dist/index.min.js"} --source-map`;
 
-    if (type == "ts") {
-      const buildTs = "tsc";
-      const buildJs = `rollup --config rollup.config.js --input ${tscTempEntry}`;
-      await fse.emptyDir(tscTempPath);
-      await fse.emptyDir(tscTypePath);
-      await fse.emptyDir(buildJsPath);
-      await executeScript(buildTs);
-      await executeScript(buildJs);
-    }
+    const listr = new Listr([
+      {
+        title: "清空输出目录",
+        task: async () => {
+          if (type === "ts") {
+            await fse.emptyDir(tscTempPath);
+            await fse.emptyDir(tscTypePath);
+          }
+          await fse.emptyDir(buildJsPath);
+        },
+      },
+      {
+        title: "转换 ts 文件",
+        enabled: () => isTs,
+        task: () => executeScript(buildTs),
+      },
+      {
+        title: "构建输出文件",
+        task: () => executeScript(buildJs),
+      },
+      {
+        title: "生成压缩文件",
+        enabled: () => needMinify,
+        task: () => executeScript(minifyJs),
+      },
+    ]);
+
+    listr.run().catch((error) => {
+      console.error(error);
+    });
   });
 
 commander.parse(process.argv);
