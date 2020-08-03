@@ -10,11 +10,11 @@ export default {
     file: "dist/index.js",
     format: "umd",
     exports: "default",
-    compact: true, // build 后代码紧凑
     noConflict: true,
     sourcemap: true,
-    sourcemapExcludeSources: true,
-    minifyInternalExports: true,
+    // sourcemapExcludeSources: true,
+    // compact: true, // build 后代码紧凑
+    // minifyInternalExports: true,
   },
   external: [],
   treeshake: true,
