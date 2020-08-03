@@ -18,11 +18,10 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-typescript": "^5.0.2",
-    "chalk": "^4.1.0",
     "commander": "^6.0.0",
     "execa": "^4.0.3",
     "fs-extra": "^9.0.1",
-    "ora": "^4.0.5",
+    "listr": "^0.14.3",
     "rollup": "^2.23.0",
     "terser": "^4.8.0",
     "typescript": "^3.9.7"
