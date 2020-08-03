@@ -4,6 +4,10 @@
   "description": "A project init template for js lib",
   "main": "dist/index.js",
   "types": "type/index.d.ts",
+  "files": [
+    "dist/*.js",
+    "type/*.ts"
+  ],
   "repository": "https://github.com/ZzzNeko/tpl-js-lib.git",
   "author": "ZzzNeko",
   "license": "MIT",
