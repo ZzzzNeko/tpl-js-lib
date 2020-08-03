@@ -6,7 +6,7 @@
     "importHelpers": true,
     "declaration": true,
     "declarationDir": "type",
-    "outDir": ".tscTemp",
+    "outDir": ".tscOut",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "esModuleInterop": true,
